@@ -80,6 +80,18 @@ window.initMap = () => {
     center: loc,
     scrollwheel: false
   });
+  //from https://stackoverflow.com/questions/30531075/remove-the-tabindex-the-google-maps-in-my-page
+  google.maps.event.addListener(self.map, "tilesloaded", function(){
+    [].slice.apply(document.querySelectorAll('#map a')).forEach(function(item) {
+      item.setAttribute('tabindex','-1');
+    });
+    [].slice.apply(document.querySelectorAll('#map button')).forEach(function(item) {
+      item.setAttribute('tabindex','-1');
+    });
+    [].slice.apply(document.querySelectorAll('#map div')).forEach(function(item) {
+      item.setAttribute('tabindex','-1');
+    });
+  });
   updateRestaurants();
 }
 
@@ -141,6 +153,7 @@ createRestaurantHTML = (restaurant) => {
   const image = document.createElement('img');
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.setAttribute('alt', `${restaurant.name} Photo`);
   li.append(image);
 
   const name = document.createElement('h1');
