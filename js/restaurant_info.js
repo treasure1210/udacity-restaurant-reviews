@@ -14,18 +14,6 @@ window.initMap = () => {
         center: restaurant.latlng,
         scrollwheel: false
       });
-      //from https://stackoverflow.com/questions/30531075/remove-the-tabindex-the-google-maps-in-my-page
-      google.maps.event.addListener(self.map, "tilesloaded", function(){
-        [].slice.apply(document.querySelectorAll('#map a')).forEach(function(item) {
-          item.setAttribute('tabindex','-1');
-        });
-        [].slice.apply(document.querySelectorAll('#map button')).forEach(function(item) {
-          item.setAttribute('tabindex','-1');
-        });
-        [].slice.apply(document.querySelectorAll('#map div')).forEach(function(item) {
-          item.setAttribute('tabindex','-1');
-        });
-      });
       fillBreadcrumb();
       DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
     }
@@ -70,6 +58,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
+  image.setAttribute('alt', `${restaurant.name} Restaurant ${restaurant.cuisine_type} Cuisine Photo`);
 
   const cuisine = document.getElementById('restaurant-cuisine');
   cuisine.innerHTML = restaurant.cuisine_type;
@@ -107,7 +96,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
  */
 fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   const container = document.getElementById('reviews-container');
-  const title = document.createElement('h2');
+  const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
   container.appendChild(title);
 
