@@ -4,6 +4,30 @@ let restaurants,
 var map
 var markers = []
 
+navigator.serviceWorker.register('service-worker.js').then(res => {
+  res.addEventListener('statechange', () => {
+    if(res.waiting) {
+      res.waiting.postMessage('skip');
+    }
+    if (reg.installing) {
+      reg.installing.addEventListener('statechange', function() {
+        if (res.installing.state == 'installed') {
+          res.installing.postMessage('skip');
+        }
+      });
+    }
+
+    reg.addEventListener('updatefound', function() {
+      reg.installing.addEventListener('statechange', function() {
+        if (res.installing.state == 'installed') {
+          res.installing.postMessage('skip');
+        }
+      });
+    });
+  });
+  console.log('Service registered!');
+});
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
